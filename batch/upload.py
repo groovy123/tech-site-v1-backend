@@ -1,4 +1,5 @@
 import argparse
+import os
 from pathlib import Path
 from typing import Generator
 import requests
@@ -6,7 +7,8 @@ from datetime import datetime
 
 URL = "http://localhost:8000/contents/"
 URL_CATEGORY = "http://localhost:8000/categories/"
-DOCUMENT_ROOT = "~/work/90.documents/01.tech"
+HOME = os.environ.get("HOME")
+DOCUMENT_ROOT = f"{HOME}/work/90.documents/01.tech"
 
 def get_categories():
     response = requests.get(URL_CATEGORY)
@@ -22,6 +24,7 @@ def update_content():
     
 def read_files(parent: str) -> Generator[tuple[str, str]]:
     root = Path(DOCUMENT_ROOT) / parent
+    print(f"root={root}")
     for md_file in root.glob('*.md'):
         yield (f"{parent}/{md_file.name}", md_file.read_text())
 
